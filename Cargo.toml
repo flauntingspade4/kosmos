@@ -1,0 +1,22 @@
+[package]
+name = "kosmos"
+version = "0.1.0"
+authors = ["Kramer Hampton <me@kramerhampton.dev>"]
+edition = "2018"
+readme = "README.md"
+homepage = "https://github.com/hamptokr/kosmos"
+repository = "https://github.com/hamptokr/kosmos"
+description = "A client library for apis of the cosmos"
+license = "Apache-2.0/MIT"
+
+[features]
+default = ["nasa"]
+
+nasa = []
+
+
+[dependencies]
+chrono = { version = "0.4.16", features = ["serde"] }
+reqwest = "0.10.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
