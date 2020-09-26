@@ -11,6 +11,7 @@ are listed below.
 | Organization | Support        |
 | ------------ | -------------- |
 | NASA         | In development |
+| USGS         | Researching    |
 
 ## APIs supported by Organization
 
