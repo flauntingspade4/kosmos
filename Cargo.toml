@@ -7,7 +7,10 @@ readme = "README.md"
 homepage = "https://github.com/hamptokr/kosmos"
 repository = "https://github.com/hamptokr/kosmos"
 description = "A client library for apis of the cosmos"
+keywords = ["cosmos", "space", "universe", "earth"]
+categories = ["web-programming::http-client"]
 license = "Apache-2.0/MIT"
+documentation = "https://docs.rs/kosmos"
 
 [features]
 default = ["nasa"]
