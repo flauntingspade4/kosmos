@@ -13,6 +13,16 @@
 //! - [`nasa`] NASA Open APIs
 //!
 //! [`nasa`]: ./nasa/struct.NasaClient.html
+//!
+//! #### Lookup an Asteroid
+//! ```no_run
+//! # use kosmos::Kosmos;
+//! # async fn run() -> kosmos::Result<()> {
+//! // Get asteroid 3542519 from the NASA NeoWS
+//! let asteroid = Kosmos::new().nasa().neo().lookup(3542519).await;
+//! # Ok(())
+//! # }
+//! ```
 
 pub mod error;
 mod from_response;

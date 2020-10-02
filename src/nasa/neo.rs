@@ -6,26 +6,26 @@ use url::Url;
 
 #[derive(Debug, Deserialize)]
 pub struct EstimatedKilometers {
-    estimated_diameter_min: f64,
-    estimated_diameter_max: f64,
+    pub estimated_diameter_min: f64,
+    pub estimated_diameter_max: f64,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct EstimatedMeters {
-    estimated_diameter_min: f64,
-    estimated_diameter_max: f64,
+    pub estimated_diameter_min: f64,
+    pub estimated_diameter_max: f64,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct EstimatedMiles {
-    estimated_diameter_min: f64,
-    estimated_diameter_max: f64,
+    pub estimated_diameter_min: f64,
+    pub estimated_diameter_max: f64,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct EstimatedFeet {
-    estimated_diameter_min: f64,
-    estimated_diameter_max: f64,
+    pub estimated_diameter_min: f64,
+    pub estimated_diameter_max: f64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -83,29 +83,29 @@ pub struct OrbitClass {
 
 #[derive(Debug, Deserialize)]
 pub struct OrbitalData {
-    orbit_id: u64,
-    orbit_determination_date: String,
-    first_observation_date: NaiveDate,
-    last_observation_date: NaiveDate,
-    data_arc_in_days: u64,
-    observations_used: u64,
-    orbit_uncertainty: f64, // Guessing, only examples I found were "0"
-    minimum_orbit_intersection: f64,
-    jupiter_tisserand_invariant: f64,
-    epoch_osculation: f64,
-    eccentricity: f64,
-    semi_major_axis: f64,
-    inclination: f64,
-    ascending_node_longitude: f64,
-    orbital_period: f64,
-    perihelion_distance: f64,
-    perihelion_argument: f64,
-    aphelion_distance: f64,
-    perihelion_time: f64,
-    mean_anomaly: f64,
-    mean_motion: f64,
-    equinox: String,
-    orbit_class: OrbitClass,
+    pub orbit_id: u64,
+    pub orbit_determination_date: String,
+    pub first_observation_date: NaiveDate,
+    pub last_observation_date: NaiveDate,
+    pub data_arc_in_days: u64,
+    pub observations_used: u64,
+    pub orbit_uncertainty: f64, // Guessing, only examples I found were "0"
+    pub minimum_orbit_intersection: f64,
+    pub jupiter_tisserand_invariant: f64,
+    pub epoch_osculation: f64,
+    pub eccentricity: f64,
+    pub semi_major_axis: f64,
+    pub inclination: f64,
+    pub ascending_node_longitude: f64,
+    pub orbital_period: f64,
+    pub perihelion_distance: f64,
+    pub perihelion_argument: f64,
+    pub aphelion_distance: f64,
+    pub perihelion_time: f64,
+    pub mean_anomaly: f64,
+    pub mean_motion: f64,
+    pub equinox: String,
+    pub orbit_class: OrbitClass,
 }
 
 #[derive(Debug, Deserialize)]
@@ -145,13 +145,13 @@ impl<'k> NeoHandler<'k> {
     /// ```
     /// # use kosmos::Kosmos;
     /// # async fn get_asteroid() {
-    ///     let asteroid = Kosmos::new()
-    ///         .nasa()
-    ///         .neo()
-    ///         .lookup(3542519)
-    ///         .await
-    ///         .unwrap();
-    ///     assert_eq!(asteroid.name, String::from("(2010 PK9)"));
+    /// let asteroid = Kosmos::new()
+    ///     .nasa()
+    ///     .neo()
+    ///     .lookup(3542519)
+    ///     .await
+    ///     .unwrap();
+    /// assert_eq!(asteroid.name, String::from("(2010 PK9)"));
     /// # }
     /// ```
     pub async fn lookup(&self, asteroid_id: u64) -> Result<NearEarthObject> {
