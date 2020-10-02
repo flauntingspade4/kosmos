@@ -1,17 +1,7 @@
 use crate::Kosmos;
 
 pub mod apod;
-
-pub enum NasaAuth {
-    Demo(String),
-    ApiKey(String),
-}
-
-impl Default for NasaAuth {
-    fn default() -> Self {
-        Self::Demo(String::from("DEMO_KEY"))
-    }
-}
+pub mod neo;
 
 pub struct NasaClient<'k> {
     kosmos: &'k Kosmos,
@@ -28,5 +18,9 @@ impl<'k> NasaClient<'k> {
 
     pub fn apod(&self) -> apod::ApodHandler {
         apod::ApodHandler::new(self)
+    }
+
+    pub fn neo(&self) -> neo::NeoHandler {
+        neo::NeoHandler::new(self)
     }
 }

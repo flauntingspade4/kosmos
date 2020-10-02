@@ -1,9 +1,9 @@
 use crate::nasa::NasaClient;
+use crate::Result;
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-/// ## apod
 /// Astronomy Photo of the Day -  an optional copyright is returned if the
 /// image is not in the public domain.
 ///
@@ -13,13 +13,14 @@ use url::Url;
 /// # use kosmos::Kosmos;
 /// # use chrono::{Datelike, NaiveDate};
 /// # async fn get_apod() {
+///     // Get the photo information from October 2nd, 2020
 ///     let apod = Kosmos::new()
 ///         .nasa()
 ///         .apod()
-///         .builder()
+///         .get()
 ///         .hd(true)
 ///         .date(NaiveDate::from_ymd(2020, 10, 2))
-///         .get()
+///         .send()
 ///         .await
 ///         .unwrap();
 ///     assert_eq!(apod.date.day(), 2);
@@ -35,13 +36,13 @@ impl<'k> ApodHandler<'k> {
         Self { nasa }
     }
 
-    pub fn builder(&self) -> ApodRequestBuilder {
+    pub fn get(&self) -> ApodRequestBuilder {
         ApodRequestBuilder::new(self)
     }
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct ApodResponse {
+#[derive(Deserialize)]
+pub struct Apod {
     pub copyright: Option<String>,
     pub date: NaiveDate,
     pub explanation: String,
@@ -60,6 +61,7 @@ pub struct ApodRequestBuilder<'k> {
     date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     hd: Option<bool>,
+    api_key: &'k str,
 }
 
 impl<'k> ApodRequestBuilder<'k> {
@@ -68,6 +70,7 @@ impl<'k> ApodRequestBuilder<'k> {
             handler,
             date: None,
             hd: None,
+            api_key: &handler.nasa.api_key,
         }
     }
 
@@ -81,16 +84,11 @@ impl<'k> ApodRequestBuilder<'k> {
         self
     }
 
-    pub async fn get(self) -> Result<ApodResponse, reqwest::Error> {
-        let mut req = self
-            .handler
+    pub async fn send(self) -> Result<Apod> {
+        self.handler
             .nasa
             .kosmos
-            .client
-            .get("https://api.nasa.gov/planetary/apod");
-
-        req = req.query(&self);
-
-        req.send().await?.json::<ApodResponse>().await
+            .get("https://api.nasa.gov/planetary/apod", Some(&self))
+            .await
     }
 }

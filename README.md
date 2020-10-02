@@ -1,6 +1,9 @@
-**Under heavy development, do not use in production**
+**Under heavy development, API subject to change**
 
 # kosmos: A client library for apis of the cosmos.
+
+The design of this client library is inspired by the awesome [Octocrab](https://github.com/XAMPPRocky/octocrab)
+library.
 
 ## What is this?
 
@@ -20,7 +23,7 @@ are listed below.
 | Service                    | Status           |
 | -------------------------- | ---------------- |
 | APOD                       | Supported        |
-| NeoWs                      | Planned          |
+| NeoWs                      | Partial          |
 | DONKI                      | Planned          |
 | Earth                      | Planned          |
 | EONET                      | Planned          |
