@@ -17,6 +17,8 @@ nasa = []
 
 [dependencies]
 chrono = { version = "0.4.16", features = ["serde"] }
-reqwest = "0.10.8"
+reqwest = { version = "0.10.8", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+tokio = { version = "0.2", features = ["full"] }
+url = { version = "2.1.1", features = ["serde"] }

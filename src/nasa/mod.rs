@@ -18,7 +18,6 @@ pub struct NasaClient<'k> {
     api_key: String,
 }
 
-/// # NASA API Services
 impl<'k> NasaClient<'k> {
     pub(crate) fn new(kosmos: &'k Kosmos) -> Self {
         Self {

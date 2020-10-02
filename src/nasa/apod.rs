@@ -1,5 +1,31 @@
 use crate::nasa::NasaClient;
+use chrono::NaiveDate;
+use serde::{Deserialize, Serialize};
+use url::Url;
 
+/// ## apod
+/// Astronomy Photo of the Day -  an optional copyright is returned if the
+/// image is not in the public domain.
+///
+/// # Examples
+///
+/// ```
+/// # use kosmos::Kosmos;
+/// # use chrono::{Datelike, NaiveDate};
+/// # async fn get_apod() {
+///     let apod = Kosmos::new()
+///         .nasa()
+///         .apod()
+///         .builder()
+///         .hd(true)
+///         .date(NaiveDate::from_ymd(2020, 10, 2))
+///         .get()
+///         .await
+///         .unwrap();
+///     assert_eq!(apod.date.day(), 2);
+/// # }
+/// ```
+///
 pub struct ApodHandler<'k> {
     nasa: &'k NasaClient<'k>,
 }
@@ -14,7 +40,19 @@ impl<'k> ApodHandler<'k> {
     }
 }
 
-#[derive(serde::Serialize)]
+#[derive(Serialize, Deserialize)]
+pub struct ApodResponse {
+    pub copyright: Option<String>,
+    pub date: NaiveDate,
+    pub explanation: String,
+    pub hdurl: Url,
+    pub media_type: String,
+    pub service_version: String,
+    pub title: String,
+    pub url: Url,
+}
+
+#[derive(Serialize)]
 pub struct ApodRequestBuilder<'k> {
     #[serde(skip)]
     handler: &'k ApodHandler<'k>,
@@ -43,7 +81,7 @@ impl<'k> ApodRequestBuilder<'k> {
         self
     }
 
-    pub async fn get(self) -> Result<reqwest::Response, reqwest::Error> {
+    pub async fn get(self) -> Result<ApodResponse, reqwest::Error> {
         let mut req = self
             .handler
             .nasa
@@ -53,6 +91,6 @@ impl<'k> ApodRequestBuilder<'k> {
 
         req = req.query(&self);
 
-        req.send().await
+        req.send().await?.json::<ApodResponse>().await
     }
 }
