@@ -23,4 +23,8 @@ impl<'k> NasaClient<'k> {
     pub fn neo(&self) -> neo::NeoHandler {
         neo::NeoHandler::new(self)
     }
+
+    pub(crate) fn format_date(&self, date: impl chrono::Datelike) -> String {
+        format!("{}-{}-{}", date.year(), date.month(), date.day())
+    }
 }

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::nasa::NasaClient;
 use crate::Result;
 use chrono::{serde::ts_milliseconds, DateTime, NaiveDate, Utc};
@@ -123,6 +125,60 @@ pub struct NearEarthObject {
     pub is_sentry_object: bool,
 }
 
+#[derive(Deserialize)]
+pub struct NeoFeedLinks {
+    pub next: Url,
+    pub prev: Url,
+    pub self_link: Url,
+    pub element_count: u32,
+}
+
+#[derive(Deserialize)]
+pub struct NeoFeed {
+    pub links: NeoFeedLinks,
+    pub near_earth_objects: HashMap<String, Vec<NearEarthObject>>,
+}
+
+#[derive(Serialize)]
+pub struct NeoFeedRequestBuilder<'k> {
+    #[serde(skip)]
+    handler: &'k NeoHandler<'k>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    start_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    end_date: Option<String>,
+    api_key: &'k str,
+}
+
+impl<'k> NeoFeedRequestBuilder<'k> {
+    pub(crate) fn new(handler: &'k NeoHandler) -> Self {
+        Self {
+            handler,
+            start_date: None,
+            end_date: None,
+            api_key: &handler.nasa.api_key,
+        }
+    }
+
+    pub fn start_date(mut self, date: impl chrono::Datelike) -> Self {
+        self.start_date = Some(self.handler.nasa.format_date(date));
+        self
+    }
+
+    pub fn end_date(mut self, date: impl chrono::Datelike) -> Self {
+        self.end_date = Some(self.handler.nasa.format_date(date));
+        self
+    }
+
+    pub async fn send(self) -> Result<NeoFeed> {
+        self.handler
+            .nasa
+            .kosmos
+            .get("https://api.nasa.gov/neo/rest/v1/feed", Some(&self))
+            .await
+    }
+}
+
 #[derive(Serialize)]
 pub struct NeoHandler<'k> {
     #[serde(skip)]
@@ -162,5 +218,9 @@ impl<'k> NeoHandler<'k> {
                 Some(self),
             )
             .await
+    }
+
+    pub fn feed(&self) -> NeoFeedRequestBuilder {
+        NeoFeedRequestBuilder::new(self)
     }
 }

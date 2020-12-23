@@ -75,7 +75,7 @@ impl<'k> ApodRequestBuilder<'k> {
     }
 
     pub fn date(mut self, date: impl chrono::Datelike) -> Self {
-        self.date = Some(format!("{}-{}-{}", date.year(), date.month(), date.day()));
+        self.date = Some(self.handler.nasa.format_date(date));
         self
     }
 
