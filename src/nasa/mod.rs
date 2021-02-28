@@ -2,6 +2,7 @@ use crate::Kosmos;
 
 pub mod apod;
 pub mod neo;
+pub mod tle;
 
 pub struct NasaClient<'k> {
     kosmos: &'k Kosmos,
@@ -22,5 +23,9 @@ impl<'k> NasaClient<'k> {
 
     pub fn neo(&self) -> neo::NeoHandler {
         neo::NeoHandler::new(self)
+    }
+
+    pub fn tle(&self) -> tle::TLEHandler {
+        tle::TLEHandler::new(self)
     }
 }
