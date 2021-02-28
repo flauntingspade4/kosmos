@@ -17,7 +17,6 @@ default = ["nasa"]
 nasa = []
 
 [dependencies]
-async-trait = "0.1.42"
 chrono = { version = "^0.4.16", features = ["serde"] }
 reqwest = { version = "^0.11.0", features = ["json"] }
 serde = { version = "^1.0", features = ["derive"] }

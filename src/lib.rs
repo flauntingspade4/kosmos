@@ -25,12 +25,10 @@
 //! ```
 
 pub mod error;
-mod from_response;
 #[cfg(feature = "nasa")]
 pub mod nasa;
 
 pub use self::error::Error;
-use from_response::FromResponse;
 use serde::Serialize;
 use snafu::*;
 
@@ -59,15 +57,19 @@ impl Kosmos {
     pub(crate) async fn get<R, A, P>(&self, url: A, parameters: Option<&P>) -> Result<R>
     where
         A: AsRef<str>,
-        P: Serialize + ?Sized,
-        R: FromResponse,
+        P: Serialize,
+        R: serde::de::DeserializeOwned,
     {
         let url = url::Url::parse(url.as_ref()).context(error::Url)?;
         let response = self._get(url, parameters).await?;
-        R::from_response(response).await
+
+        let text = response.text().await.context(crate::error::Http)?;
+
+        let mut de = serde_json::Deserializer::from_str(&text);
+        serde_path_to_error::deserialize(&mut de).context(crate::error::Json)
     }
 
-    pub(crate) async fn _get<P: Serialize + ?Sized>(
+    pub(crate) async fn _get<P: Serialize>(
         &self,
         url: impl reqwest::IntoUrl,
         parameters: Option<&P>,

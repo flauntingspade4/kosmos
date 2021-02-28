@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 ///         .nasa()
 ///         .tle()
 ///         .get()
-///         .lookup_id(28931)
+///         .lookup_id("28931")
 ///         .await
 ///         .unwrap();
 ///     assert_eq!(tle.name, "ALOS (DAICHI)".to_string());
